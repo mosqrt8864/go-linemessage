@@ -1,0 +1,9 @@
+FROM mongo:4.4
+
+ENV MONGO_INITDB_ROOT_USERNAME user
+ENV MONGO_INITDB_ROOT_PASSWORD 1234
+ENV MONGO_INITDB_DATABASE linemessage
+
+ADD mongo-init.js /docker-entrypoint-initdb.d/
+
+EXPOSE 27017
