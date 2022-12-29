@@ -1,0 +1,12 @@
+application:
+  port: 8080
+
+mongodb:
+  username: "user"
+  password: "1234"
+  address: "localhost"
+  port: 27017
+
+line:
+  channel-secret: ""
+  channel-access-token: ""
