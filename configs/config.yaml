@@ -4,9 +4,13 @@ application:
 mongodb:
   username: "user"
   password: "1234"
-  address: "localhost"
+  #開發使用
+  #address: "localhost"
+  #部署使用
+  address: "mongodb"
   port: 27017
 
 line:
   channel-secret: ""
   channel-access-token: ""
+ 
