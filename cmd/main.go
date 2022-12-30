@@ -54,8 +54,8 @@ func main() {
 
 	mongoDB := conn.Database("linemessage")
 	messageRepo := repository.NewMongoMessageRepository(mongoDB)
-	messageUseCase := usecase.NewMessageUsecase(messageRepo)
-	delivery.NewMessageHandler(r, messageUseCase, lineBot)
+	messageUseCase := usecase.NewMessageUsecase(messageRepo, lineBot)
+	delivery.NewMessageHandler(r, messageUseCase)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", appPort),
@@ -64,7 +64,8 @@ func main() {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			fmt.Println("Server Error", err)
+			log.Println("Server Error", err)
+			interrupt <- os.Interrupt
 		}
 	}()
 

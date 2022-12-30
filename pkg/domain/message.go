@@ -2,8 +2,7 @@ package domain
 
 import (
 	"context"
-
-	"github.com/line/line-bot-sdk-go/v7/linebot"
+	"net/http"
 )
 
 type Message struct {
@@ -17,5 +16,6 @@ type MessageRepository interface {
 }
 
 type MessageUsecase interface {
-	Webhooks(context.Context, []*linebot.Event) error
+	Webhooks(context.Context, *http.Request) error
+	SendMessage(context.Context, string, string) error
 }
