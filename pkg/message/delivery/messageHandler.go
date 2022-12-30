@@ -8,6 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type QueryMessageResp struct {
+	UserID string `json:"user_id"` //User ID
+	ID     string `json:"id"`      //Message ID
+	Text   string `json:"text"`    //Message text
+}
+
+type QueryMessageReq struct {
+	UserID string `json:"user_id"` //User ID
+}
+
 type SendMessageReq struct {
 	UserID string `json:"user_id"` // User ID
 	Text   string `json:"text"`    //Message text
@@ -23,6 +33,7 @@ func NewMessageHandler(e *gin.Engine, messageUserCase domain.MessageUsecase) {
 	}
 	e.POST("/api/v1/webhooks", handler.Webhooks)
 	e.POST("/api/v1/messages", handler.SendMessage)
+	e.GET("/api/v1/messages", handler.QueryMessage)
 }
 
 func (h *MessageHandler) Webhooks(c *gin.Context) {
@@ -49,5 +60,31 @@ func (h *MessageHandler) SendMessage(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,
+	})
+}
+
+func (m *MessageHandler) QueryMessage(c *gin.Context) {
+	var request QueryMessageReq
+	request.UserID = c.Query("user_id")
+	if request.UserID == "" {
+		c.JSON(http.StatusBadRequest, "parameter error")
+		return
+	}
+	messages, err := m.messageUsecase.QueryMessage(c, request.UserID)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	// po to dto
+	var response []QueryMessageResp
+	for _, msg := range messages {
+		response = append(response, QueryMessageResp{
+			ID:     msg.ID,
+			Text:   msg.Text,
+			UserID: msg.UserID})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": response,
 	})
 }

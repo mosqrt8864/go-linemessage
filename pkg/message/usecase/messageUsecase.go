@@ -53,3 +53,7 @@ func (m *messageUsecase) SendMessage(ctx context.Context, userID string, text st
 	}
 	return nil
 }
+
+func (m *messageUsecase) QueryMessage(ctx context.Context, userID string) ([]domain.Message, error) {
+	return m.messageRepo.GetUserMessages(ctx, userID)
+}

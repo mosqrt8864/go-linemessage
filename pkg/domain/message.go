@@ -18,4 +18,5 @@ type MessageRepository interface {
 type MessageUsecase interface {
 	Webhooks(context.Context, *http.Request) error
 	SendMessage(context.Context, string, string) error
+	QueryMessage(context.Context, string) ([]Message, error)
 }
